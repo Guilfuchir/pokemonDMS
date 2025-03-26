@@ -1,12 +1,21 @@
 package org.example;
 
+import javax.sql.rowset.serial.SerialStruct;
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.ResultSet;
 import java.util.List;
-
+/*
+Reinaldo Guilfuchi
+CEN3024C
+3/12/2025
+This class is being used to create the PokemonDMS UI
+*
+*/
 public class PokemonUI {
     private PokemonDMS dms;
     private JFrame frame;
@@ -68,12 +77,8 @@ public class PokemonUI {
         JButton removeButton = new JButton("Remove Pokemon");
         removeButton.addActionListener(e -> {
             int pokedex = Integer.parseInt(JOptionPane.showInputDialog("Enter Pokedex number of the Pokemon to remove:"));
-            if (dms.removePokemon(pokedex)) {
-                JOptionPane.showMessageDialog(null, "Pokemon removed successfully.");
-                displayPokemon();
-            } else {
-                JOptionPane.showMessageDialog(null, "Pokemon not found.");
-            }
+            DatabaseHandler.deletePokemon(pokedex);
+            displayPokemon();
         });
         buttonPanel.add(removeButton);
 
@@ -88,12 +93,8 @@ public class PokemonUI {
                 int attack = Integer.parseInt(attackField.getText());
                 int specialAttack = Integer.parseInt(specialAttackField.getText());
 
-                if (dms.updatePokemon(name, pokedex, hp, attack, specialAttack, pokedexStart)) {
-                    JOptionPane.showMessageDialog(null, "Pokemon updated successfully.");
-                    displayPokemon();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Pokemon not found.");
-                }
+                DatabaseHandler.updatePokemon(name, pokedex, hp, attack, specialAttack, pokedexStart);
+                JOptionPane.showMessageDialog(null, "Pokemon updated.");
                 clearFields();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Invalid input. Please enter valid numbers.");
@@ -107,13 +108,9 @@ public class PokemonUI {
             int pokedex1 = Integer.parseInt(JOptionPane.showInputDialog("Enter first Pokedex number:"));
             int pokedex2 = Integer.parseInt(JOptionPane.showInputDialog("Enter second Pokedex number:"));
 
-            if (dms.comparePokemon(pokedex1, pokedex2)) {
-                JOptionPane.showMessageDialog(null, "Pokemon with Pokedex " + pokedex1 +
-                        " is stronger.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Pokemon with Pokedex " +
-                        pokedex2 + " is stronger.");
-            }
+            int pokdexStronger = DatabaseHandler.comparePokemon(pokedex1, pokedex2);
+            JOptionPane.showMessageDialog(null, "Pokemon with Pokedex " + pokdexStronger +
+                    " is stronger.");
         });
         buttonPanel.add(compareButton);
 
@@ -133,7 +130,7 @@ public class PokemonUI {
                 }
             }
         });
-        buttonPanel.add(uploadButton);
+//        buttonPanel.add(uploadButton);
 
         frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
@@ -148,25 +145,35 @@ public class PokemonUI {
             int attack = Integer.parseInt(attackField.getText());
             int specialAttack = Integer.parseInt(specialAttackField.getText());
 
-            dms.addPokemon(name, pokedex, hp, attack, specialAttack);
-            displayArea.setText("Pokemon added successfully!");
+            DatabaseHandler.addPokemon(pokedex, name, hp, attack, specialAttack);
+            JOptionPane.showMessageDialog(null, "Pokemon added");
+            displayPokemon();
             clearFields();
         } catch (NumberFormatException ex) {
             displayArea.setText("Invalid input! Please enter correct values.");
         }
     }
 
-    // Displays all pokemon
+    // Displays all Pokémon
     private void displayPokemon() {
-        List<Pokemon> pokemonList = dms.getPokemonList();
-        StringBuilder sb = new StringBuilder();
-        for (Pokemon p : pokemonList) {
-            sb.append(p.getName()).append(" - Pokedex: ").append(p.getPokedexNumber())
-                    .append(", HP: ").append(p.getHp()).append(", Attack: ")
-                    .append(p.getAttack()).append(", Special Attack: ")
-                    .append(p.getSpecialAttack()).append("\n");
+        try{
+            ResultSet rs = DatabaseHandler.selectPokemon();
+            StringBuilder sb = new StringBuilder();
+            while(rs.next()){
+                int pokedex = rs.getInt("PokedexNumber");
+                String name = rs.getString("PokemonName");
+                int Hp = rs.getInt("Hp");
+                int attack = rs.getInt("attack");
+                int specialAttack = rs.getInt("specialAttack");
+                sb.append(name).append(" - Pokedex: ").append(pokedex)
+                        .append(", HP: ").append(Hp).append(", Attack: ")
+                        .append(attack).append(", Special Attack: ")
+                        .append(specialAttack).append("\n");
+            }
+            displayArea.setText(sb.toString());
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        displayArea.setText(sb.toString());
     }
 
     // clears all the text fields

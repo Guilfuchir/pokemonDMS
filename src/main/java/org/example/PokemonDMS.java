@@ -124,12 +124,6 @@ class PokemonDMS {
         }
     }
 
-    public static void main(String[] args) {
-//        PokemonDMS dms = new PokemonDMS();
-        new PokemonUI();
-//        dms.run();
-    }
-
     public List<Pokemon> getPokemonList() {
         return pokemonList;
     }

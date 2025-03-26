@@ -91,12 +91,12 @@ public class PokemonTest
 
     @Test
     void loadingDataFromFileSuccess() {
-        String fileName = "./file.txt";
-        String simulatedInput = "./file.txt";
+        String fileName = "./pokemon-data.txt";
+        String simulatedInput = "./pokemon-data.txt";
         InputStream is = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(is);
         dms.scanner = new Scanner(System.in);
-        dms.loadDataFromFile("./file.txt");
+        dms.loadDataFromFile("./pokemon-data.txt");
 
         System.out.println(dms.getPokemonList().get(0).getName());
 
