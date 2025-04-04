@@ -9,18 +9,24 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.ResultSet;
 import java.util.List;
-/*
-Reinaldo Guilfuchi
-CEN3024C
-3/12/2025
-This class is being used to create the PokemonDMS UI
-*
-*/
+/**
+ * This class represents the UI for the Pokémon Data Management System (DMS).
+ * It allows the user to interact with the Pokémon DMS using a graphical interface.
+ * The user can add, update, remove, and display Pokémon as well as compare stats.
+ *
+ * Author: Reinaldo Guilfuchi
+ * Date: 4/3/2025
+ * Course: CEN3024C
+ */
 public class PokemonUI {
     private PokemonDMS dms;
     private JFrame frame;
     private JTextArea displayArea;
     private JTextField nameField, pokedexField, hpField, attackField, specialAttackField;
+
+    /**
+     * Constructs the Pokémon UI and initializes all the GUI components and event listeners.
+     */
 
     public PokemonUI() {
         // Creating frame
@@ -136,7 +142,12 @@ public class PokemonUI {
         frame.setVisible(true);
     }
 
-    // Adds pokemon to DMS
+
+
+    /**
+     * Adds a Pokémon to DMS using values that were entered in the text fields.
+     * Validates the input before submitting to the DatabaseHandler.
+     */
     private void addPokemon() {
         try {
             String name = nameField.getText();
@@ -154,7 +165,12 @@ public class PokemonUI {
         }
     }
 
-    // Displays all Pokémon
+
+
+    /**
+     * Retrieves and displays all Pokémon that are stored in the DMS.
+     * Outputs the results to the central text area.
+     */
     private void displayPokemon() {
         try{
             ResultSet rs = DatabaseHandler.selectPokemon();
@@ -176,7 +192,11 @@ public class PokemonUI {
         }
     }
 
-    // clears all the text fields
+
+    /**
+     * Clears all input text fields (Name, Pokedex Number, HP, Attack, Special Attack).
+     * Is called after adding or updating a Pokémon.
+     */
 
     private void clearFields() {
         nameField.setText("");

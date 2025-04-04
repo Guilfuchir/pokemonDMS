@@ -1,5 +1,9 @@
 package org.example;
 
+/**
+ * Main method that starts the Pokémon DMS application.
+ */
+
 public class Main {
     public static void main(String[] args) {
         new Login();

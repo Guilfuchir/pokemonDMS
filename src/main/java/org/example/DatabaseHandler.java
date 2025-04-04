@@ -5,14 +5,19 @@ import java.sql.*;
 public class DatabaseHandler {
     public static Connection connection;
 
-
+    /**
+     * Establishes a connection to the MySQL database.
+     *
+     * @param serverName "localhost:3306".
+     * @param databaseName "Pokemondb".
+     * @param username "root".
+     * @param password "Tacos4me".
+     */
     public static void startDB(String serverName, String databaseName, String username, String password){
         String driverName = "com.mysql.jdbc.Driver";
-//        String serverName = "localhost:3306";
-//        String databaseName = "Pokemondb";
+
         String url = "jdbc:mysql://" + serverName + "/" + databaseName;
-//        String username = "root";
-//        String password = "Tacos4me";
+
 
         try{
             connection = DriverManager.getConnection(url, username, password);
@@ -22,7 +27,9 @@ public class DatabaseHandler {
         }
     }
 
-
+/**
+ * Retrieves all Pokémon entries from the DMS.
+ */
     public static ResultSet selectPokemon() {
         try {
             PreparedStatement stm = connection.prepareStatement("SELECT * FROM pokemon");
@@ -34,6 +41,15 @@ public class DatabaseHandler {
         return null;
     }
 
+    /**
+     * Adds a new Pokémon to the database.
+     *
+     * @param pokeDex Pokémon's Pokedex number.
+     * @param name Pokémon name.
+     * @param hp Hit points.
+     * @param attack Attack stat.
+     * @param specialAtk Special attack stat.
+     */
     public static void addPokemon(int pokeDex, String name, int hp, int attack, int specialAtk){
         try{
             PreparedStatement stm = connection.prepareStatement("INSERT INTO pokemon (PokedexNumber, PokemonName," +
@@ -52,6 +68,11 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Deletes a Pokémon from the DMS.
+     *
+     * @param pokeDex The Pokedex number of the Pokémon to delete.
+     */
     public static void deletePokemon(int pokeDex){
         try{
             PreparedStatement stm = connection.prepareStatement("DELETE FROM pokemon WHERE PokedexNumber=?");
@@ -62,6 +83,16 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Updates an existing Pokémon in the DMS.
+     *
+     * @param name Updated Pokémon name.
+     * @param pokedex Updated Pokedex number.
+     * @param hp Updated HP value.
+     * @param attack Updated Attack value.
+     * @param specialAttack Updated Special Attack value.
+     * @param startingPokedex Original Pokedex number.
+     */
     public static void updatePokemon(String name, int pokedex, int hp, int attack, int specialAttack, int startingPokedex){
         try {
             PreparedStatement stm = connection.prepareStatement("UPDATE pokemon SET PokedexNumber=?, PokemonName=?, " +
@@ -82,6 +113,13 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Compares the Attack values of the two Pokémon.
+     *
+     * @param pokedex1 First Pokémon's Pokedex number.
+     * @param pokedex2 Second Pokémon's Pokedex number.
+     * @return The Pokedex number of the Pokémon with the higher Attack stat.
+     */
     public static int comparePokemon(int pokedex1, int pokedex2){
         try{
             PreparedStatement stm1 = connection.prepareStatement("SELECT * FROM pokemon WHERE PokedexNumber=?");

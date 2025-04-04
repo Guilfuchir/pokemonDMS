@@ -5,6 +5,9 @@ import java.awt.*;
 
 public class Login extends JFrame {
 
+    /**
+     * Constructs the login window, where the user can input server information and connect to the DMS.
+     */
     public Login() {
         setTitle("Database Login");
         setSize(400, 250);
@@ -37,6 +40,10 @@ public class Login extends JFrame {
         panel.add(passField);
         panel.add(new JLabel()); // Empty space
         panel.add(loginButton);
+
+        /**
+         * Handles the login actions when the "Login" button is pressed.
+         */
 
         loginButton.addActionListener(e -> {
             String server = serverField.getText();
